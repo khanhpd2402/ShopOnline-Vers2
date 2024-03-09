@@ -78,7 +78,10 @@ public class CouponManageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        CouponDAO cdb = new CouponDAO();
+        String id = request.getParameter("id");
+        cdb.deleteCoupon(Integer.parseInt(id));
+        response.sendRedirect("couponmanage");
     }
 
     /**

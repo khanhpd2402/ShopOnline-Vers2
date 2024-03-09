@@ -44,15 +44,19 @@
                 </div>
 
             </div><!--/.row-->
-
+            <h3 style="color: green">${messSuccess}</h3>
 
             <!--/.main-->
             <div class="row">
                 <div class="add_form">
-                    <form action="addcoupon" method="post" enctype="multipart/form-data">
-                        <div class="inp_ctn col-lg-6"><h4>Code</h4>
+                    <form action="addcoupon" method="post">
+                        <div class="inp_ctn col-lg-6">
+                            <p style="color: red">${messExistCode}</p>
+                            <h4>Code</h4>
                             <input type="text" name="code" placeholder="MUAHE5" id="couponCode" oninput="formatCouponCode('couponCode')" required=""e></div>
-                        <div class="inp_ctn col-lg-6"><h4> Value</h4>
+                        <div class="inp_ctn col-lg-6">
+                            <p style="color: red">${messError}</p>
+                            <h4> Value</h4>
                             <input type="text" name="value" placeholder="0.05 hoac 20.000VND" id="valueInput" oninput="formatNumber('valueInput')" required="" ></div>
                         <div class="inp_ctn col-lg-6"><h4> Expiration Date</h4>
                             <input type="date" name="expirationDate" required ></div>

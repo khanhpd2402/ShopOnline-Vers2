@@ -42,6 +42,8 @@
                     <h3></h3>
                 </div>
             </div><!--/.row-->
+            <h3 style="color: red">${messError}</h3>
+            <h3 style="color: green">${messSuccess}</h3>
             <div class="row">
                 <form action="addproduct" method="post" enctype="multipart/form-data">
                     <div class="add_form">

@@ -32,6 +32,47 @@
             .hidden-column {
                 display: none;
             }
+            form {
+                max-width: 400px;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+                margin-right: 10px;
+            }
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.7);
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 30%;
+            }
+            .close {
+                color: #0c5460;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                width: 3px;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
         </style>
     </head>
 
@@ -103,7 +144,7 @@
                                     <td id="Action" data-column="col17">
                                         <a href="updatecoupon?id=${da.id}"><li class=" fa fa-pencil-square-o"></li></a>
                                         &oline;&oline;
-                                        <a href="couponmanage?id=${da.id}"><li class=" fa fa-trash"></li></a>
+                                        <button type="button" id="openDeleteModalBtn" onclick="openDeleteModal('${da.id}')"><i class="fas fa-trash"></i></button>
                                     </td>
 
                                 </tr>
@@ -118,7 +159,19 @@
                 </div>
             </div>
         </div>
-
+        <!--modal cảnh báo khi người dùng muốn xóa-->
+        <div id="modalDelete" class="modal">
+            <div class="modal-content">
+                <span id="close" class="close">&times;</span>
+                <form name="fd" action="couponmanage" method="post">
+                    <input type="text" name="id" id="idDelette" hidden="" >
+                    <p>Are you sure want to delete this coupon?</p>
+                    <div class="button-container2">
+                        <button type="submit" id="deleteButton" style="background-color: #ffc107; "><i class="fas fa-check"></i> Xác Nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <script src="jsadmin/jquery-1.11.1.min.js"></script>
         <script src="jsadmin/bootstrap.min.js"></script>
@@ -130,22 +183,48 @@
         <script src="jsadmin/custom.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <script>
-            $(document).ready(function () {
-                // Handle column selection change
-                $('#columnSelector').change(function () {
-                    var selectedColumns = $(this).val();
+                                            $(document).ready(function () {
+                                                // Handle column selection change
+                                                $('#columnSelector').change(function () {
+                                                    var selectedColumns = $(this).val();
 
-                    // Show/hide columns based on selection
-                    $('#CouponTable th, #CouponTable td').each(function () {
-                        var columnId = $(this).attr('id');
-                        if (selectedColumns.includes(columnId)) {
-                            $(this).removeClass('hidden-column');
-                        } else {
-                            $(this).addClass('hidden-column');
-                        }
-                    });
-                });
-            });
+                                                    // Show/hide columns based on selection
+                                                    $('#CouponTable th, #CouponTable td').each(function () {
+                                                        var columnId = $(this).attr('id');
+                                                        if (selectedColumns.includes(columnId)) {
+                                                            $(this).removeClass('hidden-column');
+                                                        } else {
+                                                            $(this).addClass('hidden-column');
+                                                        }
+                                                    });
+                                                });
+                                            });
+        </script>
+        <script>
+            function openDeleteModal(id) {
+                var modal = document.getElementById("modalDelete");
+// Get the <span> element that closes the modal
+                var span = document.getElementById("close");
+                // When the user clicks the button, open the modal 
+                modal.style.display = "block";
+                // Gán giá trị userContactID cho thuộc tính value
+                document.getElementById("idDelette").value = id;
+                // When the user clicks on <span> (x), close the modal
+                span.onclick = function () {
+                    closeModal();
+                };
+
+// When the user clicks anywhere outside of the modal, close it
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        closeModal();
+                    }
+                };
+                // Function to close the modal
+                function closeModal() {
+                    modal.style.display = "none";
+                }
+            }
         </script>
     </body>
 </html>

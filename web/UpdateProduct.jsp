@@ -46,8 +46,7 @@
                 </div>
 
             </div><!--/.row-->
-
-
+            <h3 style="color: red">${messError}</h3>
             <!--/.main-->
             <div class="row">
                 <div class="add_form">
@@ -74,7 +73,7 @@
                                 <div class="inp_ctn col-lg-6"><h4> Quantity of Product</h4>
                                     <input type="text" name="quantity" placeholder="Example: 100" required  value="${p.quantity}"></div>
                                 <div class="inp_ctn col-lg-6"><h4>Discount</h4>
-                                    <input type="text" name="discount" placeholder="Example: 0.1" value="${p.discount}" ></div>
+                                    <input type="text" name="discount" placeholder="Example: 0.1" value="${p.discount}" id="discount" oninput="formatNumber('discount')"></div>
                                 <div class="inp_ctn col-lg-6"><h4> Product Status</h4>
                                     <select name="productStatus" id="ProductStatus" class="content_inf" style="height: 30px;width:150px;">
                                         <option value="1" <c:if test="${p.productStatus == 1}">selected=""</c:if>>Active</option>

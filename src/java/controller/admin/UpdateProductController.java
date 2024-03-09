@@ -76,16 +76,18 @@ public class UpdateProductController extends HttpServlet {
         BrandDAO sdb = new BrandDAO();
 
         String productID = request.getParameter("productID");
-        if (productID != null) {
+        if (productID != null && productID.length() > 0) {
             int productId = Integer.parseInt(productID);
             Product p = pd.getProductByID(productId);
             request.setAttribute("datap", p);
+            List<Category> listAllc = cdb.getAllCategory();
+            request.setAttribute("datac", listAllc);
+            List<Brand> listAllb = sdb.getAllBrandToSearch();
+            request.setAttribute("datab", listAllb);
+            request.getRequestDispatcher("UpdateProduct.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("productmanage");
         }
-        List<Category> listAllc = cdb.getAllCategory();
-        request.setAttribute("datac", listAllc);
-        List<Brand> listAllb = sdb.getAllBrandToSearch();
-        request.setAttribute("datab", listAllb);
-        request.getRequestDispatcher("UpdateProduct.jsp").forward(request, response);
 
     }
 
@@ -111,49 +113,62 @@ public class UpdateProductController extends HttpServlet {
         String graphic = request.getParameter("graphic").trim();
         String display = request.getParameter("display").trim();
         String quantity_raw = request.getParameter("quantity").trim();
-        String discount_raw = request.getParameter("discount").trim();
+        String discount_raw = request.getParameter("discount").trim().replace(",", "");
         String productStatus_raw = request.getParameter("productStatus").trim();
         String strOriginPrice = request.getParameter("OriginPrice").trim().replace(",", "");
         String strSalePrice = request.getParameter("SalePrice").trim().replace(",", "");
         String brandID = request.getParameter("BrandID").trim();
         String categoryID = request.getParameter("CategoryID").trim();
         String describe = request.getParameter("describe").trim();
-
-        int productId = Integer.parseInt(productID);
-        int brandId = Integer.parseInt(brandID);
-        int categoryId = Integer.parseInt(categoryID);
-        int quantity = Integer.parseInt(quantity_raw);
-        int productStatus = Integer.parseInt(productStatus_raw);
-        double discount = 0;
-        if (discount_raw != null) {
-            discount = Double.parseDouble(discount_raw);
-        }
-        double originPrice = Float.parseFloat(strOriginPrice);
-        double salePrice = Float.parseFloat(strSalePrice);
-
-        String img;
-        Product product = pd.getProductByID(productId);
-        Part imagePart = request.getPart("image");
-        // Lấy tên của file ảnh
-        String fileName = imagePart.getSubmittedFileName();
-        if (fileName.trim() == null || fileName.trim().length() == 0) {
-            img = product.getProductImg();
-        } else {
-            // Tạo một đường dẫn tuyệt đối của file ảnh trên server
-            String savePath = "D:\\Semester_5\\SWP391\\g5-swp391-hungBranch\\web\\images"; // Giả sử có một thư mục images trên máy cua minh
-            String filePath = savePath + File.separator + fileName;
-            // Kiểm tra xem thư mục images có tồn tại hay không và tạo nếu cần
-            File saveDir = new File(savePath);
-            if (!saveDir.exists()) {
-                saveDir.mkdir();
+        try {
+            int productId = Integer.parseInt(productID);
+            int brandId = Integer.parseInt(brandID);
+            int categoryId = Integer.parseInt(categoryID);
+            int quantity = Integer.parseInt(quantity_raw);
+            int productStatus = Integer.parseInt(productStatus_raw);
+            double discount = 0;
+            if (discount_raw != null) {
+                discount = Double.parseDouble(discount_raw);
             }
-            imagePart.write(filePath);
-            // Lưu file ảnh vào thư mục images trên server
-            img = "images/" + fileName;
+            double originPrice = Float.parseFloat(strOriginPrice);
+            double salePrice = Float.parseFloat(strSalePrice);
+
+            String img;
+            Product product = pd.getProductByID(productId);
+            Part imagePart = request.getPart("image");
+            // Lấy tên của file ảnh
+            String fileName = imagePart.getSubmittedFileName();
+            if (fileName.trim() == null || fileName.trim().length() == 0) {
+                img = product.getProductImg();
+            } else {
+                // Tạo một đường dẫn tuyệt đối của file ảnh trên server
+                String savePath = "D:\\Semester_5\\SWP391\\g5-swp391-hungBranch\\web\\images"; // Giả sử có một thư mục images trên máy cua minh
+                String filePath = savePath + File.separator + fileName;
+                // Kiểm tra xem thư mục images có tồn tại hay không và tạo nếu cần
+                File saveDir = new File(savePath);
+                if (!saveDir.exists()) {
+                    saveDir.mkdir();
+                }
+                imagePart.write(filePath);
+                // Lưu file ảnh vào thư mục images trên server
+                img = "images/" + fileName;
+            }
+            Product p = new Product(productId, ProductName, describe, originPrice, salePrice, discount, img, quantity, productStatus, brandId, categoryId, cpu, ram, capacity, graphic, display);
+            pd.updateProduct(p);
+            response.sendRedirect("productmanage");
+        } catch (ServletException | IOException | NumberFormatException e) {
+            CategoryDAO cdb = new CategoryDAO();
+            BrandDAO sdb = new BrandDAO();
+            Product p = pd.getProductByID(Integer.parseInt(productID));
+            request.setAttribute("datap", p);
+            List<Category> listAllc = cdb.getAllCategory();
+            request.setAttribute("datac", listAllc);
+            List<Brand> listAllb = sdb.getAllBrandToSearch();
+            request.setAttribute("datab", listAllb);
+            request.setAttribute("messError", "Invalid format number!");
+            request.getRequestDispatcher("UpdateProduct.jsp").forward(request, response);
         }
-        Product p = new Product(productId, ProductName, describe, originPrice, salePrice, discount, img, quantity, productStatus, brandId, categoryId, cpu, ram, capacity, graphic, display);
-        pd.updateProduct(p);
-        response.sendRedirect("productmanage");
+
     }
 
     /**

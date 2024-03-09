@@ -50,21 +50,25 @@
             <div class="row">
                 <div class="add_form">
                     <c:set var="p" value="${requestScope.dataCoupon}"/>
-                    <form action="updatecoupon" method="post" enctype="multipart/form-data">
+                    <form action="updatecoupon" method="post">
                         <div class="inp_ctn col-lg-6 "><h4> ID</h4>
                             <input type="text" name="id" value="${p.id}" readonly=""></div>
-                        <div class="inp_ctn col-lg-6"><h4>Code</h4>
+                        <div class="inp_ctn col-lg-6">
+                            <p style="color: red">${messExistCode}</p>
+                            <h4>Code</h4>
                             <input type="text" name="code" placeholder="MUAHE5" id="couponCode" value="${p.code}" oninput="formatCouponCode('couponCode')" required=""></div>
-                        <div class="inp_ctn col-lg-6"><h4> Value</h4>
+                        <div class="inp_ctn col-lg-6">
+                            <p style="color: red">${messError}</p>
+                            <h4> Value</h4>
                             <input type="text" name="value" placeholder="0.05 hoac 20.000VND" id="valueInput" oninput="formatNumber('valueInput')"  value="${p.value}" required=""></div>
-                        <div class="inp_ctn col-lg-6"><h4> Expiration Date</h4>
-                            <input type="date" name="expirationDate" required  value="${p.expirationDate}"></div>
                         <div class="inp_ctn col-lg-6"><h4> Type</h4>
                             <select name="productStatus" id="ProductStatus" class="content_inf" style="height: 30px;width:170px;">
                                 <option value="1" <c:if test="${p.type}">selected=""</c:if>>Giảm giá theo %</option>
                                 <option value="0" <c:if test="${!p.type}">selected=""</c:if>>Giảm giá theo VND</option>
-                            </select></div>
-
+                                </select></div>
+                            <div class="inp_ctn col-lg-6"></div>
+                            <div class="inp_ctn col-lg-6"><h4> Expiration Date</h4>
+                                <input type="date" name="expirationDate" required  value="${p.expirationDate}"></div>
                         <script>
                             function formatNumber(id) {
                                 var input = document.getElementById(id);

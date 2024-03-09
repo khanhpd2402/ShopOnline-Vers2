@@ -12,6 +12,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import model.Coupon;
 
 /**
@@ -85,8 +88,34 @@ public class UpdateCouponServlet extends HttpServlet {
         String id_raw = request.getParameter("id");
         String code = request.getParameter("code");
         String value_raw = request.getParameter("value").trim().replace(",", "");
-        String expirationDate = request.getParameter("expirationDate");
-        String productStatus_raw = request.getParameter("productStatus");
+        String expirationDate_raw = request.getParameter("expirationDate");
+        String productStatus = request.getParameter("productStatus");
+
+        CouponDAO cdb = new CouponDAO();
+        Coupon coupon = cdb.getCouponByCode(code);
+        if (expirationDate_raw != null && !expirationDate_raw.isEmpty()) {
+            LocalDate expirationDateLocalDate = LocalDate.parse(expirationDate_raw, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            Date expirationDate = java.sql.Date.valueOf(expirationDateLocalDate);
+            try {
+                double value = Double.parseDouble(value_raw);
+                if (coupon != null && coupon.getId() != Integer.parseInt(id_raw)) {
+                    request.setAttribute("messExistCode", "Coupon Code already exist!");
+                    Coupon cou = cdb.getCouponById(Integer.parseInt(id_raw));
+                    request.setAttribute("dataCoupon", cou);
+                    request.getRequestDispatcher("UpdateCoupon.jsp").forward(request, response);
+                } else {
+                    Coupon c = new Coupon(Integer.parseInt(id_raw), code, value, productStatus.equals("1"), expirationDate);
+                    cdb.updateCoupon(c);
+                    response.sendRedirect("couponmanage");
+                }
+            } catch (NumberFormatException e) {
+                Coupon cou = cdb.getCouponById(Integer.parseInt(id_raw));
+                request.setAttribute("dataCoupon", cou);
+                request.setAttribute("messError", "Invalid format value!");
+                request.getRequestDispatcher("UpdateCoupon.jsp").forward(request, response);
+
+            }
+        }
     }
 
     /**

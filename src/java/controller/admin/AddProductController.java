@@ -107,40 +107,53 @@ public class AddProductController extends HttpServlet {
         String categoryID = request.getParameter("CategoryID").trim();
         String describe = request.getParameter("describe").trim();
 
-        int brandId = Integer.parseInt(brandID);
-        int categoryId = Integer.parseInt(categoryID);
-        int quantity = Integer.parseInt(quantity_raw);
-        int productStatus = Integer.parseInt(productStatus_raw);
-        double discount = 0;
-        if (discount_raw != null) {
-            discount = Double.parseDouble(discount_raw);
-        }
-        double originPrice = Float.parseFloat(strOriginPrice);
-        double salePrice = Float.parseFloat(strSalePrice);
-
-        // Lấy đối tượng Part theo tên của input kiểu file
-        String img;
-        if (request.getPart("image") == null) {
-            img = "NULL";
-        } else {
-            Part imagePart = request.getPart("image");
-            // Lấy tên của file ảnh
-            String fileName = imagePart.getSubmittedFileName();
-            // Tạo một đường dẫn tuyệt đối của file ảnh trên server
-            String savePath = "D:\\Semester_5\\SWP391\\g5-swp391-hungBranch\\web\\images"; // Giả sử có một thư mục images trên server
-            String filePath = savePath + File.separator + fileName;
-            // Kiểm tra xem thư mục images có tồn tại hay không và tạo nếu cần
-            File saveDir = new File(savePath);
-            if (!saveDir.exists()) {
-                saveDir.mkdir();
+        try {
+            int brandId = Integer.parseInt(brandID);
+            int categoryId = Integer.parseInt(categoryID);
+            int quantity = Integer.parseInt(quantity_raw);
+            int productStatus = Integer.parseInt(productStatus_raw);
+            double discount = 0;
+            if (discount_raw != null) {
+                discount = Double.parseDouble(discount_raw);
             }
-            // Lưu file ảnh vào thư mục images trên server
-            imagePart.write(filePath);
-            img = "images/" + fileName;
+            double originPrice = Float.parseFloat(strOriginPrice);
+            double salePrice = Float.parseFloat(strSalePrice);
+
+            // Lấy đối tượng Part theo tên của input kiểu file
+            String img;
+            if (request.getPart("image") == null) {
+                img = "NULL";
+            } else {
+                Part imagePart = request.getPart("image");
+                // Lấy tên của file ảnh
+                String fileName = imagePart.getSubmittedFileName();
+                // Tạo một đường dẫn tuyệt đối của file ảnh trên server
+                String savePath = "D:\\Semester_5\\SWP391\\g5-swp391-hungBranch\\web\\images"; // Giả sử có một thư mục images trên server
+                String filePath = savePath + File.separator + fileName;
+                // Kiểm tra xem thư mục images có tồn tại hay không và tạo nếu cần
+                File saveDir = new File(savePath);
+                if (!saveDir.exists()) {
+                    saveDir.mkdir();
+                }
+                // Lưu file ảnh vào thư mục images trên server
+                imagePart.write(filePath);
+                img = "images/" + fileName;
+            }
+            Product p = new Product(ProductName, describe, originPrice, salePrice, discount, img, quantity, productStatus, brandId, categoryId, cpu, ram, capacity, graphic, display);
+            pd.insertProduct(p);
+            request.setAttribute("messSuccess", "Add product success!");
+            request.getRequestDispatcher("AddProduct.jsp").forward(request, response);
+        } catch (ServletException | IOException | NumberFormatException e) {
+            CategoryDAO cdb = new CategoryDAO();
+            BrandDAO sdb = new BrandDAO();
+            List<Category> listAllc = cdb.getAllCategory();
+            request.setAttribute("datac", listAllc);
+            List<Brand> listAllb = sdb.getAllBrandToSearch();
+            request.setAttribute("datab", listAllb);
+            request.setAttribute("messError", "Invalid format number!");
+            request.getRequestDispatcher("AddProduct.jsp").forward(request, response);
+
         }
-        Product p = new Product(ProductName, describe, originPrice, salePrice, discount, img, quantity, productStatus, brandId, categoryId, cpu, ram, capacity, graphic, display);
-        pd.insertProduct(p);
-        response.sendRedirect("productmanage");
     }
 
     /**
