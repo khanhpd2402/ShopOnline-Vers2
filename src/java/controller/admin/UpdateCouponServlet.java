@@ -65,7 +65,7 @@ public class UpdateCouponServlet extends HttpServlet {
         CouponDAO cdb = new CouponDAO();
         String id = request.getParameter("id");
         if (id != null && id.length() > 0) {
-            //get all Coupon
+            //get Coupon by id
             Coupon coupon = cdb.getCouponById(Integer.parseInt(id));
             request.setAttribute("dataCoupon", coupon);
             request.getRequestDispatcher("UpdateCoupon.jsp").forward(request, response);
@@ -85,30 +85,35 @@ public class UpdateCouponServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Lấy thông tin từ form
         String id_raw = request.getParameter("id");
         String code = request.getParameter("code");
         String value_raw = request.getParameter("value").trim().replace(",", "");
         String expirationDate_raw = request.getParameter("expirationDate");
         String productStatus = request.getParameter("productStatus");
-
+// Tạo đối tượng CouponDAO để thực hiện các thao tác liên quan đến coupon trong cơ sở dữ liệu
         CouponDAO cdb = new CouponDAO();
         Coupon coupon = cdb.getCouponByCode(code);
+        // Kiểm tra ngày hết hạn có được nhập hay không
         if (expirationDate_raw != null && !expirationDate_raw.isEmpty()) {
             LocalDate expirationDateLocalDate = LocalDate.parse(expirationDate_raw, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             Date expirationDate = java.sql.Date.valueOf(expirationDateLocalDate);
             try {
                 double value = Double.parseDouble(value_raw);
+                // Kiểm tra xem mã coupon đã tồn tại chưa (trừ trường hợp nếu mã đó thuộc coupon cần cập nhật)
                 if (coupon != null && coupon.getId() != Integer.parseInt(id_raw)) {
                     request.setAttribute("messExistCode", "Coupon Code already exist!");
                     Coupon cou = cdb.getCouponById(Integer.parseInt(id_raw));
                     request.setAttribute("dataCoupon", cou);
                     request.getRequestDispatcher("UpdateCoupon.jsp").forward(request, response);
                 } else {
+                    // Cập nhật thông tin của coupon trong cơ sở dữ liệu
                     Coupon c = new Coupon(Integer.parseInt(id_raw), code, value, productStatus.equals("1"), expirationDate);
                     cdb.updateCoupon(c);
                     response.sendRedirect("couponmanage");
                 }
             } catch (NumberFormatException e) {
+                // Xử lý ngoại lệ nếu giá trị nhập vào không hợp lệ
                 Coupon cou = cdb.getCouponById(Integer.parseInt(id_raw));
                 request.setAttribute("dataCoupon", cou);
                 request.setAttribute("messError", "Invalid format value!");

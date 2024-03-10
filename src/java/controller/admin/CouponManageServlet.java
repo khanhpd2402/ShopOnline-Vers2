@@ -80,6 +80,7 @@ public class CouponManageServlet extends HttpServlet {
             throws ServletException, IOException {
         CouponDAO cdb = new CouponDAO();
         String id = request.getParameter("id");
+        //xoa 1 ma giam gia theo id
         cdb.deleteCoupon(Integer.parseInt(id));
         response.sendRedirect("couponmanage");
     }

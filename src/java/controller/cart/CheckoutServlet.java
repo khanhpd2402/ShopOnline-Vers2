@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Cart;
@@ -85,8 +84,6 @@ public class CheckoutServlet extends HttpServlet {
         if (us != null) {
             //lay user theo id user dc lay tu session
             User u = ud.getAnUser(us.getUsername());
-            request.setAttribute("user", u);
-
             ProductDAO d = new ProductDAO();
             List<Product> list = d.getAllProduct(0);
             Cookie[] arr = request.getCookies();

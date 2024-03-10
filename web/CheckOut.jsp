@@ -80,29 +80,25 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="firstName">Họ</label>
-                                            <input type="text" class="form-control" id="firstName" placeholder="" value="${requestScope.user.firstName}" readonly="">
-                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                            <input type="text" class="form-control" id="firstName" placeholder="" value="${requestScope.fullInfoUser.firstName}" readonly="">
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="lastName">Tên</label>
-                                            <input type="text" class="form-control" id="lastName" placeholder="" value="${requestScope.user.lastName}" readonly="">
-                                            <div class="invalid-feedback"> Valid last name is required. </div>
+                                            <input type="text" class="form-control" id="lastName" placeholder="" value="${requestScope.fullInfoUser.lastName}" readonly="">
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="lastName">Email</label>
                                         <input type="text" class="form-control" id="address" placeholder="" value="${requestScope.fullInfoUser.email}" readonly="">
-                                        <div class="invalid-feedback"> Valid email is required. </div>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="address">Số Điện Thoại</label>
                                     <input type="text" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" title="Please enter a valid phone number." value="${requestScope.fullInfoUser.phone}" required="">
-                                    <div class="invalid-feedback"> Please enter your shipping address. </div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="address2">Địa Chỉ Nhận Hàng</label>
-                                    <input type="text" class="form-control" id="address2" name="address" placeholder="" value="${requestScope.fullInfoUser.address}" required=""> </div>
+                                    <input type="text" class="form-control" id="address2" name="address" placeholder="" title="Please enter your shipping address." value="${requestScope.fullInfoUser.address}" required=""> </div>
                                 <hr class="mb-4">
                                 <div class="d-block my-3">
                                     <span>Phương Thức Thanh Toán</span> 

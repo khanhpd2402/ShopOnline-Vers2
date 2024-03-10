@@ -76,25 +76,32 @@ public class AddCouponServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Lấy thông tin từ form
         String code = request.getParameter("code");
         String value_raw = request.getParameter("value").trim().replace(",", "");
         String expirationDate_raw = request.getParameter("expirationDate");
         String productStatus = request.getParameter("productStatus");
-
+// Tạo đối tượng CouponDAO để thực hiện các thao tác liên quan đến coupon trong cơ sở dữ liệu
         CouponDAO cdb = new CouponDAO();
+        // Kiểm tra xem mã coupon đã tồn tại chưa
         Coupon coupon = cdb.getCouponByCode(code);
+        // Kiểm tra ngày hết hạn có được nhập hay không
         if (expirationDate_raw != null && !expirationDate_raw.isEmpty()) {
+            //format lai ngay de luu vao database
             LocalDate expirationDateLocalDate = LocalDate.parse(expirationDate_raw, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             Date expirationDate = java.sql.Date.valueOf(expirationDateLocalDate);
             try {
                 double value = Double.parseDouble(value_raw);
+                // Nếu coupon chưa tồn tại, thêm mới vào cơ sở dữ liệu
                 if (coupon == null) {
                     cdb.insertUserContact(code, value, productStatus.equals("1"), expirationDate);
                     request.setAttribute("messSuccess", "Add coupon success!");
-                }else{
+                } else {
+                    // Nếu coupon đã tồn tại, thông báo lỗi
                     request.setAttribute("messExistCode", "Coupon Code already exist!");
                 }
             } catch (NumberFormatException e) {
+                // Xử lý ngoại lệ nếu giá trị nhập vào không hợp lệ
                 request.setAttribute("messError", "Invalid format value!");
             }
             request.getRequestDispatcher("AddCoupon.jsp").forward(request, response);

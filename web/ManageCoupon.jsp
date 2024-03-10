@@ -3,7 +3,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value = "vi_VN"/>
-<%@ page import="java.time.LocalDate" %>
 <html>
     <head>
         <meta charset="utf-8">
@@ -91,15 +90,6 @@
             </div><!--/.row-->
 
             <div class="row">
-                <div class="col-lg-6 row" style="display: inline-block;">
-                    <form action="couponmanage" method="post" > 
-                        <div class="form-group col-lg-12 row " >
-                            <input type="text" class="form-control"  name="search" placeholder="Search" style="height: 38px; width: 300px;" >                                     
-                            <input type="submit"  value="Search" style="height: 38px; width: 100px;">  
-                        </div>
-                    </form>
-                </div>
-
                 <div class="col-lg-2" style="display: inline-block;">
                     <h2>Coupons</h2>
                 </div>
@@ -116,9 +106,6 @@
                         <option value="expirationDate" selected>Expiration Date</option>
                         <option value="Action" selected>Action</option>
                     </select>
-                    <%
-                      LocalDate currentDate = LocalDate.now();
-                    %>
                     <table id="CouponTable">
                         <thead>
                             <tr>
@@ -151,11 +138,6 @@
                             </c:forEach>
                         </tbody>
                     </table>
-                    <c:if test="${requestScope.notfound != null}">
-                        <div class="centered-message">
-                            <p><i class="fas fa-exclamation-circle"></i>${requestScope.notfound}</p>
-                        </div>
-                    </c:if>
                 </div>
             </div>
         </div>
