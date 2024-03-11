@@ -84,7 +84,7 @@ public class LoginServlet extends HttpServlet {
         String role = request.getParameter("role");
         String rem = request.getParameter("rem");
         
-        
+         // Tạo các Cookie để lưu thông tin đăng nhập nếu chọn "Ghi nhớ đăng nhập"
         Cookie cuser = new Cookie("cuser", username);
         Cookie cpass = new Cookie("cpass", pass);
         Cookie crem = new Cookie("crem", rem);
@@ -104,6 +104,7 @@ public class LoginServlet extends HttpServlet {
         UserDAO ud = new UserDAO();
         AdminDAO ad = new AdminDAO();
         try {
+            // Kiểm tra đăng nhập dựa trên vai trò (user hoặc admin)
             if (ud.checkUserToLogin(username, pass) && role.equals("u")) {
                 User u = ud.getAnUser(username);
                 session.setAttribute("userinfo", u);
@@ -113,6 +114,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("admininfo", adm);
                 response.sendRedirect("productmanage");
             } else {
+                // Thông báo khi tên đăng nhập hoặc mật khẩu không chính xác
                 request.setAttribute("mess", "<p>Tên đăng nhập hoặc mật khẩu không chính xác!</p>");
                 request.getRequestDispatcher("Login.jsp").forward(request, response);
             }

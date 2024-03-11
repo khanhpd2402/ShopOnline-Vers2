@@ -62,9 +62,10 @@ public class CartController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
+        // Lấy danh sách sản phẩm từ cơ sở dữ liệu
         ProductDAO d = new ProductDAO();
         List<Product> list = d.getAllProduct(0);
+        // Lấy thông tin giỏ hàng từ cookie
         Cookie[] arr = request.getCookies();
         String  txt = "";
         if(arr != null){
@@ -74,7 +75,7 @@ public class CartController extends HttpServlet {
                 }
             }
         }
-        
+         // Tạo đối tượng Cart để quản lý giỏ hàng
         Cart cart = new Cart(txt, list);
         request.setAttribute("cart", cart);
         request.getRequestDispatcher("Cart.jsp").forward(request, response);

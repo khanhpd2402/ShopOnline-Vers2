@@ -92,6 +92,7 @@ public class RegisterServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User u = udb.getAnUser(username);
         UserContact userContact = ucdb.getExistContact(email, phone);
+        // Kiểm tra sự tồn tại của người dùng hoặc thông tin liên hệ
         if (u != null || userContact != null) {
             if (u != null) {
                 if (u.getUsername().equals(username)) {
@@ -109,32 +110,18 @@ public class RegisterServlet extends HttpServlet {
 
             request.getRequestDispatcher("Register.jsp").forward(request, response);
         } else {
-            if (gender.equals("male")) {
-                User uNew = new User(username, password, firstname, lastname, true, email, phone, address, 1);
-                session.setAttribute("insertuser", uNew);
-                String verificationCode = sendMail.generateVerificationCode();
+            User uNew = new User(username, password, firstname, lastname, gender.equals("male"), email, phone, address, 1);
+            session.setAttribute("insertuser", uNew);
+            String verificationCode = sendMail.generateVerificationCode();
 
-                // Lưu mã xác nhận vào session
-                session.setAttribute("verification", verificationCode);
-                session.setMaxInactiveInterval(300);
+            // Lưu mã xác nhận vào session
+            session.setAttribute("verification", verificationCode);
+            session.setMaxInactiveInterval(300);
 
-                // Gửi email chứa mã xác nhận đến người dùng
-                sendMail.sendConfirmationEmail(email, verificationCode);
-                response.sendRedirect("verifyregister");
+            // Gửi email chứa mã xác nhận đến người dùng
+            sendMail.sendConfirmationEmail(email, verificationCode);
+            response.sendRedirect("verifyregister");
 
-            } else if (gender.equals("female")) {
-                User uNew = new User(username, password, firstname, lastname, false, email, phone, address, 1);
-                session.setAttribute("insertuser", uNew);
-                String verificationCode = sendMail.generateVerificationCode();
-
-                // Lưu mã xác nhận vào session
-                session.setAttribute("verification", verificationCode);
-                session.setMaxInactiveInterval(300);
-
-                // Gửi email chứa mã xác nhận đến người dùng
-                sendMail.sendConfirmationEmail(email, verificationCode);
-                response.sendRedirect("verifyregister");
-            }
         }
     }
 

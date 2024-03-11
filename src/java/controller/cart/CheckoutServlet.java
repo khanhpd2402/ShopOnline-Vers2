@@ -84,8 +84,10 @@ public class CheckoutServlet extends HttpServlet {
         if (us != null) {
             //lay user theo id user dc lay tu session
             User u = ud.getAnUser(us.getUsername());
+            // Lấy danh sách sản phẩm từ cơ sở dữ liệu
             ProductDAO d = new ProductDAO();
             List<Product> list = d.getAllProduct(0);
+             // Lấy thông tin giỏ hàng từ cookie
             Cookie[] arr = request.getCookies();
             String txt = "";
             if (arr != null) {
@@ -95,6 +97,7 @@ public class CheckoutServlet extends HttpServlet {
                     }
                 }
             }
+            // Tạo đối tượng Cart để quản lý giỏ hàng
             Cart cart = new Cart(txt, list);
             request.setAttribute("cart", cart);
             request.setAttribute("fullInfoUser", u);
@@ -117,7 +120,7 @@ public class CheckoutServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User us = (User) session.getAttribute("userinfo");
-
+// Lấy thông tin từ form
         String couponCode = request.getParameter("code");
         String paymentMethod = request.getParameter("paymentMethod");
         String address = request.getParameter("address");
@@ -128,9 +131,11 @@ public class CheckoutServlet extends HttpServlet {
         ProductDAO d = new ProductDAO();
         OrderDAO odao = new OrderDAO();
         UserDAO ud = new UserDAO();
-
+// Lấy thông tin người dùng theo ID từ session
         User u = ud.getAnUser(us.getUsername());
+        // Lấy danh sách sản phẩm từ cơ sở dữ liệu
         List<Product> list = d.getAllProduct(0);
+        // Lấy thông tin giỏ hàng từ cookie
         Cookie[] arr = request.getCookies();
         String txt = "";
         if (couponCode != null) {
@@ -145,10 +150,11 @@ public class CheckoutServlet extends HttpServlet {
                     }
                 }
             }
+            // Tạo đối tượng Cart để quản lý giỏ hàng
             Cart cart = new Cart(txt, list);
             request.setAttribute("cart", cart);
             request.setAttribute("fullInfoUser", u);
-            //user nhap ma giam gia sai
+             // Người dùng nhập mã giảm giá sai
             if (coupon == null) {
                 request.setAttribute("notiCoupon", "Mã giảm giá không hợp lệ!");
             } else {

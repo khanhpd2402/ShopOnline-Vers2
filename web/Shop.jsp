@@ -186,7 +186,7 @@
                                                                         <c:if test="${da.discount > 0}"><p class="sale">- ${da.discount * 100}%</p></c:if>
                                                                         <c:if test="${da.discount == 0}"><p class="new">New</p></c:if>
                                                                         </div>
-                                                                        <img src="${da.productImg}" class="img-fluid" alt="${da.productName}">
+                                                                        <img src="${da.productImg}" class="card-img-top" alt="${da.productName}">
                                                                     <div class="mask-icon">
                                                                         <ul>
                                                                             <li><a href="productdetail?productID=${da.productID}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
@@ -221,7 +221,7 @@
                                                                             <c:if test="${da.discount > 0}"><p class="sale">- ${da.discount * 100}%</p></c:if>
                                                                             <c:if test="${da.discount == 0}"><p class="new">New</p></c:if>
                                                                             </div>
-                                                                            <img src="${da.productImg}" class="img-fluid" alt="${da.productName}">
+                                                                            <img src="${da.productImg}" class="card-img-top" alt="${da.productName}">
                                                                         <div class="mask-icon">
                                                                             <ul>
                                                                                 <li><a href="productdetail?productID=${da.productID}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
@@ -268,7 +268,7 @@
                                                                     <c:if test="${df.discount > 0}"><p class="sale">- ${df.discount * 100}%</p></c:if>
                                                                     <c:if test="${df.discount == 0}"><p class="new">New</p></c:if>
                                                                     </div>
-                                                                    <img src="${df.productImg}" class="img-fluid" alt="${df.productName}">
+                                                                    <img src="${df.productImg}" class="card-img-top" alt="${df.productName}">
                                                                 <div class="mask-icon">
                                                                     <ul>
                                                                         <li><a href="productdetail?productID=${df.productID}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
@@ -305,7 +305,7 @@
                                                                         <c:if test="${df.discount > 0}"><p class="sale">- ${df.discount * 100}%</p></c:if>
                                                                         <c:if test="${df.discount == 0}"><p class="new">New</p></c:if>
                                                                         </div>
-                                                                        <img src="${df.productImg}" class="img-fluid" alt="${df.productName}">
+                                                                        <img src="${df.productImg}" class="card-img-top" alt="${df.productName}">
                                                                     <div class="mask-icon">
                                                                         <ul>
                                                                             <li><a href="productdetail?productID=${df.productID}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
@@ -349,7 +349,7 @@
                                                                 <c:if test="${ds.discount > 0}"><p class="sale">- ${ds.discount * 100}%</p></c:if>
                                                                 <c:if test="${ds.discount == 0}"><p class="new">New</p></c:if>
                                                                 </div>
-                                                                <img src="${ds.productImg}" class="img-fluid" alt="${ds.productName}">
+                                                                <img src="${ds.productImg}" class="card-img-top" alt="${ds.productName}">
                                                             <div class="mask-icon">
                                                                 <ul>
                                                                     <li><a href="productdetail?productID=${ds.productID}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
@@ -384,7 +384,7 @@
                                                                     <c:if test="${ds.discount > 0}"><p class="sale">- ${ds.discount * 100}%</p></c:if>
                                                                     <c:if test="${ds.discount == 0}"><p class="new">New</p></c:if>
                                                                     </div>
-                                                                    <img src="${ds.productImg}" class="img-fluid" alt="${ds.productName}">
+                                                                    <img src="${ds.productImg}" class="card-img-top" alt="${ds.productName}">
                                                                 <div class="mask-icon">
                                                                     <ul>
                                                                         <li><a href="productdetail?productID=${ds.productID}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
