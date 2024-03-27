@@ -14,9 +14,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import model.Slider;
 import model.Product;
+import model.User;
 
 /**
  *
@@ -87,6 +89,10 @@ public class HomeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Cookie[] arr = request.getCookies();
+         // Lấy HttpSession từ request để kiểm tra xem người dùng đã đăng nhập hay chưa
+        HttpSession session = request.getSession();
+        // Lấy thông tin người dùng từ session
+        User u = (User) session.getAttribute("userinfo");
         String txt = "";
         //doc cookie
         if (arr != null) {
@@ -102,7 +108,7 @@ public class HomeServlet extends HttpServlet {
         String id = request.getParameter("id");
         //add neu cookie rong
         if (txt.isEmpty()) {
-            txt = id + ":1";
+            txt = id + ":1" + ":" + u.getUserID();
         } 
         //add new cookie da co
         else {
@@ -113,15 +119,16 @@ public class HomeServlet extends HttpServlet {
             for (String item : items) {
                 String[] parts = item.split(":");
                 String itemId = parts[0];
+                int userId = Integer.parseInt(parts[2]);
 
-                if (itemId.equals(id)) {
+                if (itemId.equals(id) && userId == u.getUserID()) {
                     isIdFound = true;
                     break;
                 }
             }
 
             if (!isIdFound) {
-                txt = txt + "_" + id + ":1";
+                txt = txt + "_" + id + ":1" + ":" + u.getUserID();
             }
         }
 

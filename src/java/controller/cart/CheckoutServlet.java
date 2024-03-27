@@ -59,7 +59,7 @@ public class CheckoutServlet extends HttpServlet {
                 out.println("<title>Servlet CheckoutServlet</title>");
                 out.println("</head>");
                 out.println("<body>");
-                out.println("<h1>Servlet CheckoutServlet at " + (long) totalMoney + "_" +(long) amountCoupon + "</h1>");
+                out.println("<h1>Servlet CheckoutServlet at " + (long) totalMoney + "_" + (long) amountCoupon + "</h1>");
                 out.println("</body>");
                 out.println("</html>");
             }
@@ -87,7 +87,7 @@ public class CheckoutServlet extends HttpServlet {
             // Lấy danh sách sản phẩm từ cơ sở dữ liệu
             ProductDAO d = new ProductDAO();
             List<Product> list = d.getAllProduct(0);
-             // Lấy thông tin giỏ hàng từ cookie
+            // Lấy thông tin giỏ hàng từ cookie
             Cookie[] arr = request.getCookies();
             String txt = "";
             if (arr != null) {
@@ -154,7 +154,7 @@ public class CheckoutServlet extends HttpServlet {
             Cart cart = new Cart(txt, list);
             request.setAttribute("cart", cart);
             request.setAttribute("fullInfoUser", u);
-             // Người dùng nhập mã giảm giá sai
+            // Người dùng nhập mã giảm giá sai
             if (coupon == null) {
                 request.setAttribute("notiCoupon", "Mã giảm giá không hợp lệ!");
             } else {
@@ -177,15 +177,15 @@ public class CheckoutServlet extends HttpServlet {
 
             try {
                 //neu user add ma giam gia
-                if (totalMoney_raw != null && amountCoupon_raw != null && amountCoupon_raw.length()  != 0) {
+                if (totalMoney_raw != null && amountCoupon_raw != null && amountCoupon_raw.length() != 0) {
                     //pasre ra kieu du lieu long de khong bi loi
                     long totalMoney = (long) Double.parseDouble(totalMoney_raw);
                     long amountCoupon = (long) Double.parseDouble(amountCoupon_raw);
-                    odao.insertOrder(u.getUserID(),phone, cart, paymentMethod, address, totalMoney, "", amountCoupon);
+                    odao.insertOrder(u.getUserID(), phone, cart, paymentMethod, address, totalMoney, "", amountCoupon);
                     //neu nguoi dung khong add ma giam gia
-                }else if(totalMoney_raw != null){
+                } else if (totalMoney_raw != null) {
                     long totalMoney = (long) Double.parseDouble(totalMoney_raw);
-                    odao.insertOrder(u.getUserID(),phone, cart, paymentMethod, address, totalMoney, "", 0);
+                    odao.insertOrder(u.getUserID(), phone, cart, paymentMethod, address, totalMoney, "", 0);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(CheckoutServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -195,10 +195,7 @@ public class CheckoutServlet extends HttpServlet {
             c.setMaxAge(0);
             response.addCookie(c);
             response.sendRedirect("home");
-        } else if (paymentMethod.equals("2")) {
-
         }
-
     }
 
     /**

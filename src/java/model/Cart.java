@@ -4,8 +4,6 @@
  */
 package model;
 
-import java.util.List;
-import model.Item;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -34,13 +32,30 @@ public class Cart {
         }
         return null;
     }
+    private Item getItemById(int id, int userID) {
+        for (Item i : items) {
+            if (i.getProduct().getProductID() == id && i.getUserID() == userID) {
+                return i;
+            }
+        }
+        return null;
+    }
 
     public int getQuantityOfItemById(int id) {
         return getItemById(id).getQuantity();
 
     }
+
     public void addItem(Item xItem) {
         if (getItemById(xItem.getProduct().getProductID()) != null) {
+            Item item = getItemById(xItem.getProduct().getProductID());
+            item.setQuantity(xItem.getQuantity());
+        } else {
+            items.add(xItem);
+        }
+    }
+    public void addItem(Item xItem,int userID) {
+        if (getItemById(xItem.getProduct().getProductID(), userID) != null) {
             Item item = getItemById(xItem.getProduct().getProductID());
             item.setQuantity(xItem.getQuantity());
         } else {
@@ -53,36 +68,40 @@ public class Cart {
             items.remove(getItemById(id));
         }
     }
-    public double getTotalMoney(){
+
+    public double getTotalMoney() {
         double t = 0;
         for (Item i : items) {
-            t += (i.getProduct().getSalePrice()- i.getProduct().getSalePrice() * i.getProduct().getDiscount()) * i.getQuantity();
+            t += (i.getProduct().getSalePrice() - i.getProduct().getSalePrice() * i.getProduct().getDiscount()) * i.getQuantity();
         }
         return t;
     }
-    private Product getProductById(int id, List<Product> list){
-         for (Product i : list) {
-            if(i.getProductID()== id){
+
+    private Product getProductById(int id, List<Product> list) {
+        for (Product i : list) {
+            if (i.getProductID() == id) {
                 return i;
             }
         }
-         return null;
+        return null;
     }
+
     //constructer cart de add vao array item
-    public Cart(String txt, List<Product> list){
+    public Cart(String txt, List<Product> list) {
         items = new ArrayList<>();
         try {
-        if(txt != null && txt.length() != 0){
-            String[] s = txt.split("_");
-            for (String i : s) {
-                String[] n = i.split(":");
-                int id = Integer.parseInt(n[0]);
-                int quantity = Integer.parseInt(n[1]);
-                Product p = getProductById(id, list);
-                Item t = new Item(p, quantity, p.getSalePrice());
-                addItem(t);
+            if (txt != null && txt.length() != 0) {
+                String[] s = txt.split("_");
+                for (String i : s) {
+                    String[] n = i.split(":");
+                    int id = Integer.parseInt(n[0]);
+                    int quantity = Integer.parseInt(n[1]);
+                    int userId = Integer.parseInt(n[2]);
+                    Product p = getProductById(id, list);
+                    Item t = new Item(p, quantity, p.getSalePrice(), userId);
+                    addItem(t);
+                }
             }
-        }
         } catch (NumberFormatException e) {
         }
     }

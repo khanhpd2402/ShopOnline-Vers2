@@ -13,10 +13,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Cart;
 import model.Item;
 import model.Product;
+import model.User;
 
 /**
  *
@@ -63,6 +65,10 @@ public class ProcessController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Lấy HttpSession từ request để kiểm tra xem người dùng đã đăng nhập hay chưa
+        HttpSession session = request.getSession();
+        // Lấy thông tin người dùng từ session
+        User u = (User) session.getAttribute("userinfo");
         // add vao cookie o trang product detail hoac trang shop se duoc gui den day de xu ly
         String id = request.getParameter("productID");
         // returnUrl_raw se tra va url ma trang user dang đứng de add vao cart
@@ -83,7 +89,7 @@ public class ProcessController extends HttpServlet {
 
             //add neu cookie rong
             if (txt.isEmpty()) {
-                txt = id + ":1";
+                txt = id + ":1" + ":" + u.getUserID();
             } //add new cookie da co
             else {
                 String[] items = txt.split("_");
@@ -93,15 +99,16 @@ public class ProcessController extends HttpServlet {
                 for (String item : items) {
                     String[] parts = item.split(":");
                     String itemId = parts[0];
+                    int userId = Integer.parseInt(parts[2]);
 
-                    if (itemId.equals(id)) {
+                    if (itemId.equals(id) && userId == u.getUserID()) {
                         isIdFound = true;
                         break;
                     }
                 }
 
                 if (!isIdFound) {
-                    txt = txt + "_" + id + ":1";
+                    txt = txt + "_" + id + ":1" + ":" + u.getUserID();
                 }
             }
 
@@ -135,10 +142,11 @@ public class ProcessController extends HttpServlet {
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Handles the HTTP <code>POST</code> method.0- * @param request servlet
+     * request
      *
-     * 0- * @param request servlet request
      *
+     * @param request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
@@ -146,6 +154,10 @@ public class ProcessController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Lấy HttpSession từ request để kiểm tra xem người dùng đã đăng nhập hay chưa
+        HttpSession session = request.getSession();
+        // Lấy thông tin người dùng từ session
+        User u = (User) session.getAttribute("userinfo");
         String action = request.getParameter("act");
         if (action == null) {
             ProductDAO d = new ProductDAO();
@@ -176,17 +188,17 @@ public class ProcessController extends HttpServlet {
                     num = cart.getQuantityOfItemById(id);
                 }
                 double price = p.getSalePrice();
-                Item t = new Item(p, num, price);
+                Item t = new Item(p, num, price,u.getUserID());
                 cart.addItem(t);
 
             } catch (NumberFormatException e) {
             }
             List<Item> items = cart.getItems();
             txt = "";
-            if (items.size() > 0) {
-                txt = items.get(0).getProduct().getProductID() + ":" + items.get(0).getQuantity();
+            if (!items.isEmpty()) {
+                txt = items.get(0).getProduct().getProductID() + ":" + items.get(0).getQuantity() + ":" + items.get(0).getUserID();
                 for (int i = 1; i < items.size(); i++) {
-                    txt += "_" + items.get(i).getProduct().getProductID() + ":" + items.get(i).getQuantity();
+                    txt += "_" + items.get(i).getProduct().getProductID() + ":" + items.get(i).getQuantity() + ":" + items.get(i).getUserID();
                 }
             }
             Cookie c = new Cookie("cart", txt);
@@ -195,8 +207,6 @@ public class ProcessController extends HttpServlet {
             response.sendRedirect("cart");
         } // xoa 1 item trong cart
         else if (action.equals("remove")) {
-            ProductDAO d = new ProductDAO();
-            List<Product> list = d.getAllProduct(0);
             Cookie[] arr = request.getCookies();
             String txt = "";
             //doc cookie
@@ -211,18 +221,18 @@ public class ProcessController extends HttpServlet {
                 }
             }
             String id = request.getParameter("id");
-            //cat chuoi txt theo tung item(vd: 18:1_17:2 = [18:1];[17:2])
+            //cat chuoi txt theo tung item(vd: 18:1:1_17:2:1 = [18:1:1];[17:2:1])
             String[] ids = txt.split("_");
             String out = "";
-            for (int i = 0; i < ids.length; i++) {
-                String[] s = ids[i].split(":");
+            for (String id1 : ids) {
+                String[] s = id1.split(":");
                 //check neu khong phai id can xoa se luu vao out
-                if (!s[0].equals(id)) {
+                if (!s[0].equals(id) ||(Integer.parseInt(s[2]) != u.getUserID() && s[0].equals(id))) {
                     //add lan dau
                     if (out.isEmpty()) {
-                        out = ids[i];
+                        out = id1;
                     } else {
-                        out += "_" + ids[i];
+                        out += "_" + id1;
                     }
                 }
             }
@@ -232,7 +242,6 @@ public class ProcessController extends HttpServlet {
                 c.setMaxAge(60 * 60 * 24 * 360);
                 response.addCookie(c);
             }
-            Cart cart = new Cart(out, list);
             response.sendRedirect("cart");
         }
 
